@@ -69,14 +69,11 @@ fun <T> Collection<T>.randomElement(r: Random): T {
     return this.elementAt(r.nextInt(this.size))
 }
 
-fun Collection<String>.makeSentence(): String {
-    return this.filter { it != "__start__" && it != "__end__" }.joinToString(separator = " ", postfix = ".")
-}
 
 fun main(args: Array<String>) {
     val m = Markov("__start__", "__end__")
     m.addTokens(listOf("do", "be", "do"))
     m.addTokens(listOf("do", "da", "be", "do"))
     m.addTokens(listOf("do", "do"))
-    print(m.createSeries().makeSentence())
+    print(m.createSeries())
 }
