@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.databind.MappingJsonFactory
 import org.romeo.markov.Markov
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FilenameFilter
 
 /**
@@ -14,17 +15,25 @@ import java.io.FilenameFilter
  *
  * reads slack json files
  */
-class JsonParser(val dir: File) {
+class JsonParser {
+
+    private val files: Array<File>
+
+    @Throws(FileNotFoundException::class)
+    constructor(dir: File) {
+        val tempFiles = dir.listFiles(object : FilenameFilter {
+            override fun accept(dir: File, name: String): Boolean {
+                return name.endsWith(".json")
+            }
+        })
+        if (tempFiles === null || tempFiles.isEmpty()) throw FileNotFoundException("$dir does not contain any files")
+        files = tempFiles
+    }
 
     fun buildMarkovChain(): Markov<String> {
 
         val retval = Markov("__start__", "__end__")
         val f = MappingJsonFactory()
-        val files = dir.listFiles(object : FilenameFilter {
-            override fun accept(dir: File, name: String): Boolean {
-                return name.endsWith(".json")
-            }
-        })
 
         for (file in files) {
             val jp = f.createParser(file)
@@ -33,27 +42,24 @@ class JsonParser(val dir: File) {
 
             current = jp.nextToken()
             if (current !== JsonToken.START_ARRAY) {
-                println("Error: root should be array: quiting.")
                 continue
             }
 
             while (jp.nextToken() !== JsonToken.END_ARRAY) {
-                var node = jp.readValueAsTree<TreeNode>()
-                if(node.get("subtype") === null && node.get("type")?.getString().equals("message")) {
+                val node = jp.readValueAsTree<TreeNode>()
+                if (node.get("subtype") === null && node.get("type")?.getString().equals("message")) {
                     val text = node.get("text")?.getString()
-                    if(text !== null) retval.addTokens(text.split(" "))
+                    if (text !== null) retval.addTokens(text.split(" "))
                 }
             }
         }
         return retval
     }
-
-
 }
 
 fun TreeNode.getString(): String {
     val str = this.toString()
-    return str.substring(1, str.length -1)
+    return str.substring(1, str.length - 1)
 }
 
 fun Collection<String>.makeSentence(): String {
@@ -62,7 +68,7 @@ fun Collection<String>.makeSentence(): String {
 
 fun main(args: Array<String>) {
     val markov = JsonParser(File("./test-data")).buildMarkovChain()
-    for(i in 1..1000) {
+    for (i in 1..1000) {
         println(markov.createSeries().makeSentence())
     }
 }
