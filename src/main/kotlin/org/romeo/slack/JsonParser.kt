@@ -61,7 +61,7 @@ fun Collection<String>.makeSentence(): String {
 }
 
 fun main(args: Array<String>) {
-    val markov = JsonParser(File("./wat")).buildMarkovChain()
+    val markov = JsonParser(File("./data/test")).buildMarkovChain()
     for(i in 1..1000) {
         println(markov.createSeries().makeSentence())
     }

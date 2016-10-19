@@ -13,7 +13,7 @@ buildscript {
 apply plugin: "kotlin"
 apply plugin: "application"
 
-mainClassName = 'org.romeo.markov.MarkovKt'
+mainClassName = 'org.romeo.slack.JsonParserKt'
 
 defaultTasks 'run'
 
