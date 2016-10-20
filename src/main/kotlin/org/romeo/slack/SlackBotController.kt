@@ -1,5 +1,6 @@
 package org.romeo.slack
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -17,9 +18,14 @@ class SlackBotController @Autowired constructor(val channelGenerator: ChannelGen
     @RequestMapping("/")
     fun getMessageForChannel(@RequestParam token: String,
                              @RequestParam("channel_name") requestChannel: String,
-                             @RequestParam("text") channel: String?): String {
+                             @RequestParam("text") channel: String?): SlackResponse {
         //TODO check token
-        return channelGenerator.generateMessage(channel ?: requestChannel)
+        return SlackResponse(text = channelGenerator.generateMessage(channel ?: requestChannel))
     }
 
 }
+
+data class SlackResponse(
+        @JsonProperty("response_type") val responseType: String = "in_channel",
+        val text: String
+)
