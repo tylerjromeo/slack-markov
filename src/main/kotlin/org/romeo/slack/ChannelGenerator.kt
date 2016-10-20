@@ -37,17 +37,17 @@ class ChannelGenerator {
     }
 }
 
-fun main(args: Array<String>) {
-    println("type a channel name:")
-    val channelGenerator = ChannelGenerator(File("data"))
-    while(true) {
-        val fileName = readLine()
-        if(fileName !== null) {
-            println(try {
-                channelGenerator.generateMessage(fileName)
-            } catch (e: FileNotFoundException) {
-                e.message
-            })
-        }
-    }
-}
+//fun main(args: Array<String>) {
+//    println("type a channel name:")
+//    val channelGenerator = ChannelGenerator(File("data"))
+//    while(true) {
+//        val fileName = readLine()
+//        if(fileName !== null) {
+//            println(try {
+//                channelGenerator.generateMessage(fileName)
+//            } catch (e: FileNotFoundException) {
+//                e.message
+//            })
+//        }
+//    }
+//}

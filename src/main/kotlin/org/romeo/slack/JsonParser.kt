@@ -21,12 +21,12 @@ class JsonParser {
 
     @Throws(FileNotFoundException::class)
     constructor(dir: File) {
-        val tempFiles = dir.listFiles(object : FilenameFilter {
-            override fun accept(dir: File, name: String): Boolean {
-                return name.endsWith(".json")
-            }
+        val tempFiles = dir.listFiles({ dir: File, name: String ->
+            name.endsWith(".json")
         })
-        if (tempFiles === null || tempFiles.isEmpty()) throw FileNotFoundException("$dir does not contain any files")
+        if (tempFiles === null || tempFiles.isEmpty()) {
+            throw FileNotFoundException("$dir does not contain any files")
+        }
         files = tempFiles
     }
 
@@ -42,7 +42,7 @@ class JsonParser {
 
             current = jp.nextToken()
             if (current !== JsonToken.START_ARRAY) {
-                continue
+                continue //something's wrong with the json, so just move on
             }
 
             while (jp.nextToken() !== JsonToken.END_ARRAY) {
@@ -66,9 +66,9 @@ fun Collection<String>.makeSentence(): String {
     return this.filter { it != "__start__" && it != "__end__" }.joinToString(separator = " ")
 }
 
-fun main(args: Array<String>) {
-    val markov = JsonParser(File("./test-data")).buildMarkovChain()
-    for (i in 1..1000) {
-        println(markov.createSeries().makeSentence())
-    }
-}
+//fun main(args: Array<String>) {
+//    val markov = JsonParser(File("./test-data")).buildMarkovChain()
+//    for (i in 1..1000) {
+//        println(markov.createSeries().makeSentence())
+//    }
+//}

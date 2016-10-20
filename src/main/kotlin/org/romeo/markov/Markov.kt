@@ -70,10 +70,10 @@ fun <T> Collection<T>.randomElement(r: Random): T {
 }
 
 
-fun main(args: Array<String>) {
-    val m = Markov("__start__", "__end__")
-    m.addTokens(listOf("do", "be", "do"))
-    m.addTokens(listOf("do", "da", "be", "do"))
-    m.addTokens(listOf("do", "do"))
-    print(m.createSeries())
-}
+//fun main(args: Array<String>) {
+//    val m = Markov("__start__", "__end__")
+//    m.addTokens(listOf("do", "be", "do"))
+//    m.addTokens(listOf("do", "da", "be", "do"))
+//    m.addTokens(listOf("do", "do"))
+//    print(m.createSeries())
+//}
